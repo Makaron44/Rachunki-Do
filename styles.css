@@ -340,4 +340,10 @@ body.compact .badge { font-size: 11px; padding: 2px 7px; }
     animation: statPulse 2.2s ease-out infinite;
   }
 }
+/* delikatny cień pod paskiem statystyk – lepsze odcięcie od listy */
+.stats-strip { box-shadow: 0 8px 14px rgba(0,0,0,.08); }
+
+/* mikro-animacja przy tapnięciu kafelka (miły feedback) */
+.bill:active { transform: scale(.997); transition: transform .1s; }
+
 
