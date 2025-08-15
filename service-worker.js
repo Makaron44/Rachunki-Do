@@ -1,5 +1,5 @@
 /* Simple cache-first service worker */
-const CACHE = 'billreminder-v1';
+const CACHE = 'billreminder-v10';
 const ASSETS = [
   './',
   './index.html',
