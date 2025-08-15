@@ -678,6 +678,9 @@ document.getElementById('stats-strip').classList.toggle('has-due-today', sumNow 
 
 })();
 async function updateAppNow(){
+  const btn = document.getElementById('btn-update-app');
+  if (btn) { btn.disabled = true; btn.textContent = 'Aktualizowanie…'; }
+async function updateAppNow(){
   if (!confirm('Pobrać najnowszą wersję i przeładować?')) return;
   try {
     if ('serviceWorker' in navigator) {
@@ -690,5 +693,10 @@ async function updateAppNow(){
     }
   } finally {
     location.reload(); // wczyta świeże pliki z GitHub Pages
+  }
+}
+ } finally {
+    if (btn) { btn.textContent = 'Aktualizuj aplikację'; btn.disabled = false; }
+    location.reload();
   }
 }
