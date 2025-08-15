@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Przypominacz rachunków</title>
+  <meta name="theme-color" content="#0c7be3">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <link rel="icon" type="image/png" href="./icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="compact">
+  <header class="app-header">
+    <div class="title">
+      <span class="logo">💡</span>
+      <h1>Rachunki Macius🫶</h1>
+    </div>
+    <button id="btn-install" class="btn ghost" hidden>Dodaj do ekranu gł.</button>
+<span class="brand-mark">MaciejR🫵</span>
+  </header>
+
+  <main id="view-container">
+    <!-- Widok: Lista -->
+    <section id="view-list" class="view active" aria-label="Lista rachunków">
+      <div class="toolbar">
+        <select id="filter-month"></select>
+        <button id="btn-add" class="btn primary">+ Dodaj</button>
+      </div>
+
+      <div class="stats-strip" id="stats-strip">
+        <div><span class="label">Do zapłaty</span><span id="stat-due" class="value">0</span></div>
+        <div><span class="label">Zapłacone</span><span id="stat-paid" class="value">0</span></div>
+        <div><span class="label">Do dziś</span><span id="stat-left" class="value">0</span></div>
+      </div>
+
+      <ul id="bill-list" class="bill-list" aria-live="polite"></ul>
+
+      <div class="empty" id="empty-state" hidden>
+        <p>Brak rachunków w tym miesiącu.</p>
+        <button id="btn-sample" class="btn">Wczytaj przykłady</button>
+      </div>
+    </section>
+
+    <!-- Widok: Formularz -->
+    <section id="view-form" class="view" aria-label="Dodaj/edytuj rachunek">
+      <form id="bill-form" novalidate>
+        <input type="hidden" id="bill-id">
+        <label>Nazwa
+          <input id="bill-name" type="text" placeholder="np. Czynsz" required>
+        </label>
+        <label>Kwota
+          <input id="bill-amount" type="number" inputmode="decimal" step="0.01" placeholder="np. 1200" required>
+        </label>
+        <label>Termin płatności
+          <input id="bill-due" type="date" required>
+        </label>
+        <label>Częstotliwość
+          <select id="bill-frequency">
+            <option value="once">Jednorazowo</option>
+            <option value="monthly">Miesięcznie</option>
+            <option value="quarterly">Kwartalnie</option>
+            <option value="yearly">Rocznie</option>
+            <option value="custom">Co X dni</option>
+          </select>
+        </label>
+        <label id="label-custom-interval" class="hidden">Interwał (dni)
+          <input id="bill-interval" type="number" min="2" step="1" value="30">
+        </label>
+        <label>Przypomnienie (dni przed)
+          <input id="bill-reminder" type="number" min="0" step="1" value="3">
+        </label>
+        <label>Notatka
+          <textarea id="bill-notes" rows="2" placeholder="np. nr faktury, link do eBOK"></textarea>
+        </label>
+        <div class="form-actions">
+          <button type="submit" class="btn primary">Zapisz</button>
+          <button type="button" id="btn-cancel" class="btn ghost">Anuluj</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Widok: Ustawienia -->
+    <section id="view-settings" class="view" aria-label="Ustawienia">
+<label>Motyw
+  <select id="setting-theme">
+    <option value="default" selected>Domyślny</option>
+    <option value="pastel-dark">Pastel Dark</option>
+  </select>
+</label>
+      <div class="settings">
+        <label>Waluta
+          <select id="setting-currency">
+            <option value="PLN" selected>PLN</option>
+            <option value="EUR">EUR</option>
+            <option value="USD">USD</option>
+            <option value="GBP">GBP</option>
+          </select>
+        </label>
+        <label>Domyślne przypomnienie (dni przed)
+          <input id="setting-default-reminder" type="number" min="0" step="1" value="3">
+        </label>
+        <div class="settings-actions">
+          <button id="btn-export-json" class="btn">Eksportuj (JSON)</button>
+          <label class="btn file">
+            Importuj (JSON)
+            <input type="file" id="input-import-json" accept="application/json" hidden>
+          </label>
+          <button id="btn-export-csv" class="btn">Eksportuj (CSV)</button>
+        </div>
+        <details class="note">
+          <summary>O powiadomieniach</summary>
+          <p>Aplikacja działa offline i można ją dodać do ekranu głównego. Najpewniejsze przypomnienia uzyskasz dodając
+          terminy do kalendarza telefonu (przycisk “Do kalendarza”). Przeglądarkowe powiadomienia działają tylko,
+          gdy aplikacja jest otwarta.</p>
+          <button id="btn-notify-permission" class="btn ghost">Włącz powiadomienia</button>
+          <button id="btn-test-notify" class="btn ghost">Test powiadomienia</button>
+<hr class="sep">
+<h3>O aplikacji</h3>
+<div class="brand-card">
+  <div class="brand-logo">🧾</div>
+  <div class="brand-text">
+    <div class="brand-name">
+      Rachunki Maciuś
+      <span class="brand-badge">by Maciej Ratajczak</span>
+    </div>
+    <div class="brand-sub">Wersja 1.0 • offline PWA</div>
+  </div>
+</div>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <!-- Dolna nawigacja -->
+  <nav class="tabbar">
+    <button data-target="view-list" class="tab active">Lista</button>
+    <button data-target="view-form" class="tab">Dodaj</button>
+    <button data-target="view-settings" class="tab">Ustawienia</button>
+  </nav>
+
+  <template id="tpl-bill-item">
+    <li class="bill">
+      <div class="bill-main">
+        <div class="bill-title"></div>
+        <div class="bill-sub"></div>
+      </div>
+      <div class="bill-actions">
+        <button class="btn tiny ghost btn-calendar" title="Do kalendarza">📅</button>
+        <button class="btn tiny ghost btn-paid" title="Oznacz jako zapłacone">✔</button>
+        <button class="btn tiny ghost btn-edit" title="Edytuj">✎</button>
+        <button class="btn tiny ghost btn-del" title="Usuń">🗑</button>
+      </div>
+    </li>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
