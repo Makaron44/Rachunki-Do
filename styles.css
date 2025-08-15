@@ -218,7 +218,7 @@ textarea { resize: vertical; }
 @supports (position: sticky) {
   .stats-strip {
     position: sticky;
-    top: 56px;               /* jeśli nagłówek ma inną wysokość – dostosuj */
+    top: calc(56px + env(safe-area-inset-top)); }
     z-index: 5;
     background: var(--bg);
     padding-top: 8px;
