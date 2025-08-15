@@ -456,6 +456,7 @@
     els.statPaid.textContent = fmtMoney(sumPaid);
     els.statLeft.textContent = fmtMoney(sumNow);
     document.getElementById('stats-strip').classList.toggle('has-due-today', sumNow > 0);
+
   }
 
   function escapeHtml(s) {
