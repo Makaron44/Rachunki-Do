@@ -38,7 +38,7 @@
     settingsView: $('#view-settings'),
     settingCurrency: $('#setting-currency'),
     settingDefaultReminder: $('#setting-default-reminder'),
-    settingTheme: $('#setting-theme'), // <- nowy select motywu (jeśli jest w HTML)
+    settingTheme: $('#setting-theme'), // select motywu (jeśli jest w HTML)
     btnExportJson: $('#btn-export-json'),
     inputImportJson: $('#input-import-json'),
     btnUpdateApp: $('#btn-update-app'),
@@ -69,7 +69,7 @@
       var parsed = JSON.parse(raw);
 
       // MIGRACJE:
-      // 1) brak ID na niektórych rachunkach (np. przykładowych) → nadaj
+      // 1) brak ID na niektórych rachunkach → nadaj
       if (parsed && Array.isArray(parsed.bills)) {
         for (var i = 0; i < parsed.bills.length; i++) {
           if (!parsed.bills[i].id) parsed.bills[i].id = uid();
@@ -125,7 +125,6 @@
   // ======= Motyw =======
   function applyTheme() {
     var theme = (state.settings && state.settings.theme) ? state.settings.theme : 'default';
-    // default = brak atrybutu; pastel-dark = ustaw atrybut
     if (theme === 'pastel-dark') {
       document.documentElement.setAttribute('data-theme', 'pastel-dark');
     } else {
@@ -185,7 +184,7 @@
           { name: 'Prąd', amount: 210.55, dueDate: new Date(today.getFullYear(), today.getMonth(), 15).toISOString(), frequency:'monthly', reminderDays:2 },
           { name: 'Telefon', amount: 65, dueDate: new Date(today.getFullYear(), today.getMonth(), 25).toISOString(), frequency:'monthly', reminderDays:3 }
         ];
-        for (var i = 0; i < demo.length; i++) addBill(demo[i]); // addBill nada ID
+        for (var i = 0; i < demo.length; i++) addBill(demo[i]);
         saveState();
         switchView('view-list');
       });
@@ -400,7 +399,7 @@
     inMonth.sort(function (a, b) { return new Date(a.dueDate) - new Date(b.dueDate); });
 
     els.list.innerHTML = '';
-    var sumDue = 0, sumPaid = 0;sumNow = 0;
+    var sumDue = 0, sumPaid = 0, sumNow = 0;
     els.empty.hidden = inMonth.length !== 0;
     for (var i = 0; i < inMonth.length; i++) {
       var b = inMonth[i];
@@ -431,9 +430,9 @@
         status = 'za ' + daysLeft + ' d.';
         sumDue += b.amount;
       }
-if (!b.paid && startOfDay(new Date(b.dueDate)) <= today) {
-  sumNow += b.amount;   // na dziś
-}
+      if (!b.paid && startOfDay(new Date(b.dueDate)) <= today) {
+        sumNow += b.amount;   // na dziś
+      }
 
       title.innerHTML = '<span>' + escapeHtml(b.name) + '</span> <span class="badge ' + badgeClass + '">' + status + '</span>';
 
@@ -455,8 +454,8 @@ if (!b.paid && startOfDay(new Date(b.dueDate)) <= today) {
 
     els.statDue.textContent = fmtMoney(sumDue);
     els.statPaid.textContent = fmtMoney(sumPaid);
-els.statLeft.textContent = fmtMoney(sumNow);
-document.getElementById('stats-strip').classList.toggle('has-due-today', sumNow > 0);
+    els.statLeft.textContent = fmtMoney(sumNow);
+    document.getElementById('stats-strip').classList.toggle('has-due-today', sumNow > 0);
   }
 
   function escapeHtml(s) {
@@ -518,7 +517,6 @@ document.getElementById('stats-strip').classList.toggle('has-due-today', sumNow 
       try {
         var data = JSON.parse(reader.result);
         if (!data || !Array.isArray(data.bills)) throw new Error('Zły format');
-        // migracja kategorii/ID (bez kategorii w tej wersji, ale ID w razie czego)
         for (var i = 0; i < data.bills.length; i++) {
           if (!data.bills[i].id) data.bills[i].id = uid();
         }
@@ -676,27 +674,23 @@ document.getElementById('stats-strip').classList.toggle('has-due-today', sumNow 
     }
   }
 
+  // ======= Aktualizacja PWA (czyści SW + cache, przeładowuje) =======
+  async function updateAppNow(){
+    const btn = document.getElementById('btn-update-app');
+    if (btn) { btn.disabled = true; btn.textContent = 'Aktualizowanie…'; }
+    try {
+      if ('serviceWorker' in navigator) {
+        const regs = await navigator.serviceWorker.getRegistrations();
+        for (const r of regs) { try { await r.unregister(); } catch(e){} }
+      }
+      if (window.caches) {
+        const names = await caches.keys();
+        await Promise.all(names.map(n => caches.delete(n)));
+      }
+    } finally {
+      if (btn) { btn.textContent = 'Aktualizuj aplikację'; btn.disabled = false; }
+      location.reload();
+    }
+  }
+
 })();
-async function updateAppNow(){
-  const btn = document.getElementById('btn-update-app');
-  if (btn) { btn.disabled = true; btn.textContent = 'Aktualizowanie…'; }
-async function updateAppNow(){
-  if (!confirm('Pobrać najnowszą wersję i przeładować?')) return;
-  try {
-    if ('serviceWorker' in navigator) {
-      const regs = await navigator.serviceWorker.getRegistrations();
-      for (const r of regs) { try { await r.unregister(); } catch(e){} }
-    }
-    if (window.caches) {
-      const names = await caches.keys();
-      await Promise.all(names.map(n => caches.delete(n)));
-    }
-  } finally {
-    location.reload(); // wczyta świeże pliki z GitHub Pages
-  }
-}
- } finally {
-    if (btn) { btn.textContent = 'Aktualizuj aplikację'; btn.disabled = false; }
-    location.reload();
-  }
-}
