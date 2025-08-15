@@ -277,3 +277,32 @@ body.compact .badge { font-size: 11px; padding: 2px 7px; }
   /* iOS 12+ / nowoczesne przeglądarki */
   padding-top: calc(12px + env(safe-area-inset-top));
 }
+/* --- NAPRAWA NAGŁÓWKA I PASKA STATYSTYK (iOS/safari) --- */
+
+/* 1) Ustalona wysokość nagłówka (jeśli masz inną, zmień 56px) */
+:root { --header-h: 56px; }
+
+/* 2) Nagłówek zawsze nad treścią i odsunięty od notcha/wyspy */
+.app-header{
+  position: sticky;
+  top: 0;
+  z-index: 1000;                     /* ponad kartami */
+  background: var(--bg);
+  /* safe-area (iOS) + Twój dotychczasowy padding (12px) */
+  padding-top: calc(12px + env(safe-area-inset-top));
+  /* dla starszych iOS (opcjonalnie) */
+  padding-top: calc(12px + constant(safe-area-inset-top));
+}
+
+/* 3) Pasek statystyk „Do dziś” przyklejony tuż pod nagłówkiem */
+.stats-strip{
+  position: sticky;
+  top: calc(var(--header-h) + env(safe-area-inset-top));
+  z-index: 900;                      /* trochę mniej niż nagłówek */
+  background: var(--bg);
+  padding-top: 8px;
+}
+/* jeśli kiedyś dodawałeś top:56px; zamień na powyższe calc(...) */
+
+/* 4) Upewnij się, że kafelki nie przykryją nagłówka */
+.bill{ position: relative; z-index: 1; }
