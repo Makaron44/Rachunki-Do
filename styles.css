@@ -306,3 +306,38 @@ body.compact .badge { font-size: 11px; padding: 2px 7px; }
 
 /* 4) Upewnij się, że kafelki nie przykryją nagłówka */
 .bill{ position: relative; z-index: 1; }
+/* Wyraźne podświetlenie kafelka "Do dziś", gdy coś jest do zapłaty */
+.stats-strip > div { 
+  transition: box-shadow .2s ease, border-color .2s ease, background-color .2s ease; 
+}
+
+.stats-strip.has-due-today > div:last-child {
+  border-color: #ffb020;
+  background: linear-gradient(180deg, rgba(255,176,32,.12), rgba(255,176,32,.06));
+  box-shadow: 0 0 0 2px rgba(255,176,32,.40) inset, 0 8px 18px rgba(255,176,32,.10);
+}
+
+.stats-strip.has-due-today > div:last-child .label::before {
+  content: "";
+  display: inline-block;
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #ffb020;
+  margin-right: 6px;
+}
+
+.stats-strip.has-due-today > div:last-child .value { 
+  font-weight: 800; 
+}
+
+/* Subtelny puls – tylko jeśli użytkownik nie ogranicza animacji */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes statPulse {
+    0%   { box-shadow: 0 0 0 0 rgba(255,176,32,0); }
+    70%  { box-shadow: 0 0 0 10px rgba(255,176,32,.20); }
+    100% { box-shadow: 0 0 0 0 rgba(255,176,32,0); }
+  }
+  .stats-strip.has-due-today > div:last-child {
+    animation: statPulse 2.2s ease-out infinite;
+  }
+}
+
