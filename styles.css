@@ -270,3 +270,10 @@ body.compact .badge { font-size: 11px; padding: 2px 7px; }
   padding:4px 8px; border:1px solid var(--ring);
   border-radius: 999px; background: rgba(255,255,255,.04);
 }
+/* Bezpieczny margines pod wyspę/notcha (iOS) */
+.app-header{
+  /* stary iOS 11 */
+  padding-top: calc(12px + constant(safe-area-inset-top));
+  /* iOS 12+ / nowoczesne przeglądarki */
+  padding-top: calc(12px + env(safe-area-inset-top));
+}
