@@ -41,6 +41,7 @@
     settingTheme: $('#setting-theme'), // <- nowy select motywu (jeśli jest w HTML)
     btnExportJson: $('#btn-export-json'),
     inputImportJson: $('#input-import-json'),
+    btnUpdateApp: $('#btn-update-app'),
     btnExportCsv: $('#btn-export-csv'),
     btnNotifyPerm: $('#btn-notify-permission'),
     btnTestNotify: $('#btn-test-notify'),
@@ -264,9 +265,9 @@
     if (els.btnExportJson) els.btnExportJson.addEventListener('click', exportJSON);
     if (els.inputImportJson) els.inputImportJson.addEventListener('change', importJSON);
     if (els.btnExportCsv) els.btnExportCsv.addEventListener('click', exportCSV);
-
     if (els.btnNotifyPerm) els.btnNotifyPerm.addEventListener('click', askNotificationPermission);
     if (els.btnTestNotify) els.btnTestNotify.addEventListener('click', function () { notify('Test', 'To jest testowe powiadomienie.'); });
+    if (els.btnUpdateApp) els.btnUpdateApp.addEventListener('click', updateAppNow);
 
     // Akcje na liście
     if (els.list) {
@@ -676,3 +677,18 @@ document.getElementById('stats-strip').classList.toggle('has-due-today', sumNow 
   }
 
 })();
+async function updateAppNow(){
+  if (!confirm('Pobrać najnowszą wersję i przeładować?')) return;
+  try {
+    if ('serviceWorker' in navigator) {
+      const regs = await navigator.serviceWorker.getRegistrations();
+      for (const r of regs) { try { await r.unregister(); } catch(e){} }
+    }
+    if (window.caches) {
+      const names = await caches.keys();
+      await Promise.all(names.map(n => caches.delete(n)));
+    }
+  } finally {
+    location.reload(); // wczyta świeże pliki z GitHub Pages
+  }
+}
