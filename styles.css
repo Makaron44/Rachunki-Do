@@ -387,6 +387,33 @@ body.compact .badge { font-size: 11px; padding: 2px 7px; }
   .bill-title { line-height: 1.2; margin-bottom: 0; }
   .bill-sub   { font-size: 12px; }
 }
+/* Idealne wycentrowanie ikon w przyciskach akcji (mobile, pion) */
+@media (max-width: 430px) and (orientation: portrait) {
+  .bill-actions { display: flex; align-items: center; gap: 6px; }
+
+  .bill-actions .btn {
+    /* rozmiar jak ustaliłeś, można 30–34px */
+    width: 32px; height: 32px;
+    min-width: 32px; min-height: 32px;
+    padding: 0; border-radius: 10px;
+
+    /* KLUCZ: centrowanie w pionie i poziomie */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    /* wyłącz poprzednie „sztuczki” */
+    top: 0;                 /* nadpisuje wcześniejsze top: 2–3px */
+    line-height: 1;         /* nie centrować line-heightem */
+    font-size: 14px;        /* wielkość znaku/emoji w środku */
+  }
+
+  /* Jeśli w środku jest jakiś element (span/svg) – też bez line-height */
+  .bill-actions .btn > * { line-height: 1; display: block; }
+
+  /* Drobna korekta dla „✔” (ma inną bazę) – opcjonalnie */
+  .bill-actions .btn-paid { transform: translateY(-1px); }
+}
 
 
 
