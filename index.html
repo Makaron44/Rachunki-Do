@@ -9,8 +9,9 @@
   <link rel="apple-touch-icon" href="./icon-192.png">
   <link rel="icon" type="image/png" href="./icon-192.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="stylesheet" href="styles.css?v=2">
+  <link rel="stylesheet" href="styles.css?v=3">
 </head>
 <body class="compact">
   <header class="app-header">
@@ -19,7 +20,7 @@
       <h1>Rachunki Macius🫶</h1>
     </div>
     <button id="btn-install" class="btn ghost" hidden>Dodaj do ekranu gł.</button>
-<span class="brand-mark">MaciejR🫵</span>
+    <span class="brand-mark">MaciejR🫵</span>
   </header>
 
   <main id="view-container">
@@ -75,6 +76,13 @@
         <label>Notatka
           <textarea id="bill-notes" rows="2" placeholder="np. nr faktury, link do eBOK"></textarea>
         </label>
+
+        <!-- NOWE: wybór kategorii -->
+        <label class="field">
+          <span>Kategoria</span>
+          <select id="bill-category"></select>
+        </label>
+
         <div class="form-actions">
           <button type="submit" class="btn primary">Zapisz</button>
           <button type="button" id="btn-cancel" class="btn ghost">Anuluj</button>
@@ -84,13 +92,15 @@
 
     <!-- Widok: Ustawienia -->
     <section id="view-settings" class="view" aria-label="Ustawienia">
-<label>Motyw
-  <select id="setting-theme">
-    <option value="default" selected>Domyślny</option>
-    <option value="pastel-dark">Pastel Dark</option>
-  </select>
-</label>
       <div class="settings">
+
+        <label>Motyw
+          <select id="setting-theme">
+            <option value="default" selected>Domyślny</option>
+            <option value="pastel-dark">Pastel Dark</option>
+          </select>
+        </label>
+
         <label>Waluta
           <select id="setting-currency">
             <option value="PLN" selected>PLN</option>
@@ -99,20 +109,20 @@
             <option value="GBP">GBP</option>
           </select>
         </label>
+
         <label>Domyślne przypomnienie (dni przed)
           <input id="setting-default-reminder" type="number" min="0" step="1" value="3">
         </label>
-        <div class="settings-actions">
-  <button id="btn-export-json" class="btn">Eksportuj (JSON)</button>
-  <label class="btn file">
-    Importuj (JSON)
-    <input type="file" id="input-import-json" accept="application/json" hidden>
-  </label>
-  <button id="btn-export-csv" class="btn">Eksportuj (CSV)</button>
 
-  <!-- NOWY PRZYCISK -->
-  <button id="btn-update-app" class="btn">Aktualizuj aplikację</button>
-</div>
+        <div class="settings-actions">
+          <button id="btn-export-json" class="btn">Eksportuj (JSON)</button>
+          <label class="btn file">
+            Importuj (JSON)
+            <input type="file" id="input-import-json" accept="application/json" hidden>
+          </label>
+          <button id="btn-export-csv" class="btn">Eksportuj (CSV)</button>
+          <button id="btn-update-app" class="btn">Aktualizuj aplikację</button>
+        </div>
 
         <details class="note">
           <summary>O powiadomieniach</summary>
@@ -121,19 +131,33 @@
           gdy aplikacja jest otwarta.</p>
           <button id="btn-notify-permission" class="btn ghost">Włącz powiadomienia</button>
           <button id="btn-test-notify" class="btn ghost">Test powiadomienia</button>
-<hr class="sep">
-<h3>O aplikacji</h3>
-<div class="brand-card">
-  <div class="brand-logo">🧾</div>
-  <div class="brand-text">
-    <div class="brand-name">
-      Rachunki Maciuś
-      <span class="brand-badge">by Maciej Ratajczak</span>
-    </div>
-    <div class="brand-sub">Wersja 1.0 • offline PWA</div>
-  </div>
-</div>
         </details>
+
+        <hr class="sep">
+        <h3>O aplikacji</h3>
+        <div class="brand-card">
+          <div class="brand-logo">🧾</div>
+          <div class="brand-text">
+            <div class="brand-name">
+              Rachunki Maciuś
+              <span class="brand-badge">by Maciej Ratajczak</span>
+            </div>
+            <div class="brand-sub">Wersja 1.0 • offline PWA</div>
+          </div>
+        </div>
+
+        <hr class="sep">
+        <h3>Kategorie</h3>
+        <div id="categories-panel" class="categories-panel">
+          <div id="cat-list" class="cat-list"></div> <!-- generuje JS -->
+          <div class="cat-add">
+            <input id="cat-new-name" class="input" placeholder="Nazwa kategorii">
+            <input id="cat-new-color" class="input color" type="color" value="#12d3a5">
+            <button id="btn-cat-add" class="btn">Dodaj</button>
+          </div>
+          <p class="muted small">Usunięcie kategorii przypiętych do rachunków ustawi im „Bez kategorii”.</p>
+        </div>
+
       </div>
     </section>
   </main>

@@ -218,7 +218,8 @@ textarea { resize: vertical; }
 @supports (position: sticky) {
   .stats-strip {
     position: sticky;
-    top: calc(56px + env(safe-area-inset-top)); }
+    top: calc(56px + env(safe-area-inset-top));
+    top: calc(56px + constant(safe-area-inset-top)); /* fallback dla starszego iOS */
     z-index: 5;
     background: var(--bg);
     padding-top: 8px;
@@ -410,9 +411,69 @@ body.compact .badge { font-size: 11px; padding: 2px 7px; }
   /* Drobna korekta dla „✔” (ma inną bazę) – opcjonalnie */
   .bill-actions .btn-paid { transform: translateY(-1px); }
 }
+/* --- Kategorie --- */
+.cat-pill{
+  display:inline-block; margin-right:8px; padding:2px 8px;
+  font-size:12px; font-weight:700; border-radius:999px;
+  background: color-mix(in oklab, var(--cat) 20%, transparent);
+  color: var(--text);
+  border:1px solid color-mix(in oklab, var(--cat) 55%, transparent);
+}
 
+.categories-panel .cat-row{
+  display:flex; align-items:center; gap:8px; margin-bottom:8px;
+}
+.categories-panel .input{
+  padding:8px 10px; border-radius:10px; border:1px solid var(--ring);
+  background:var(--card); color:var(--text);
+}
+.categories-panel .input.color{ width:46px; padding:0; height:36px; }
+.categories-panel .small{ font-size:12px; }
+.categories-panel .muted{ color: var(--muted); }
+/* Nowoczesny wygląd <input type="color"> w panelu kategorii */
+.categories-panel .input.color{
+  appearance: none;
+  -webkit-appearance: none;
+  width: 52px;               /* możesz zmienić np. na 46–56 */
+  height: 36px;
+  padding: 4px;
+  border-radius: 12px;
+  border: 1px solid var(--ring);
+  background: linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,0)), var(--card);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.05) inset,
+    0 8px 20px rgba(0,0,0,.20);
+  cursor: pointer;
+  transition: transform .08s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.categories-panel .input.color:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px rgba(0,0,0,.25);
+}
+.categories-panel .input.color:active{
+  transform: translateY(0);
+  box-shadow: 0 6px 16px rgba(0,0,0,.22);
+}
+.categories-panel .input.color:focus-visible{
+  outline: none;
+  border-color: color-mix(in oklab, #22d3ee 60%, var(--ring));
+  box-shadow: 0 0 0 3px color-mix(in oklab, #22d3ee 25%, transparent);
+}
 
+/* Wewnętrzny „swatch” – zaokrąglenie i bez obwódki (WebKit/Firefox) */
+.categories-panel .input.color::-webkit-color-swatch-wrapper{ padding:0; border-radius: 8px; }
+.categories-panel .input.color::-webkit-color-swatch{ border:none; border-radius: 8px; }
+.categories-panel .input.color::-moz-color-swatch{ border:none; border-radius: 8px; }
 
-
-
-
+/* Odrobina responsywności – na bardzo wąskich ekranach odrobinę mniejsze */
+@media (max-width: 430px) {
+  .categories-panel .input.color{ width: 46px; height: 34px; padding: 3px; border-radius: 10px; }
+}
+/* Wariant okrągły */
+.categories-panel .input.color.round{
+  width: 40px; height: 40px; padding: 4px; border-radius: 999px;
+}
+.categories-panel .input.color.round::-webkit-color-swatch,
+.categories-panel .input.color.round::-moz-color-swatch{
+  border-radius: 999px;
+}
