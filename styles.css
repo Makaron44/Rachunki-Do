@@ -361,11 +361,7 @@ body.compact .badge { font-size: 11px; padding: 2px 7px; }
   line-height: 1.25;
   margin-bottom: 2px;
 }
-.bill-title {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+
 /* Mniejsze ikonki akcji na telefonie w pionie */
 @media (max-width: 430px) and (orientation: portrait) {
   .bill-actions { gap: 6px; }
