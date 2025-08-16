@@ -350,6 +350,24 @@ body.compact .badge { font-size: 11px; padding: 2px 7px; }
 [data-theme="pastel-dark"] .badge.ok   { background: rgba(18,211,165,.20);  border-color: rgba(18,211,165,.45); }
 [data-theme="pastel-dark"] .badge.paid { background: rgba(34,197,94,.22);   border-color: rgba(34,197,94,.45); }
 ::selection { background: rgba(12,123,227,.28); color: #fff; }
+/* Obniż ikony akcji w wierszu rachunku o 2–3 px */
+.bill-actions .btn {
+  position: relative;
+  top: 3px;           /* jak chcesz mniej/więcej – zmień na 2px albo 4px */
+}
+
+/* Daj tytułowi trochę oddechu, żeby nic go nie „ścinało” */
+.bill-title {
+  line-height: 1.25;
+  margin-bottom: 2px;
+}
+.bill-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
 
 
 
